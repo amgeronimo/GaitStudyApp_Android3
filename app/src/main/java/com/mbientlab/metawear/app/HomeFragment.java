@@ -36,17 +36,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.internal.NavigationMenuItemView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Checkable;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -81,6 +88,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import bolts.Task;
@@ -124,57 +132,35 @@ public class HomeFragment extends ModuleFragmentBase {
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        EditText sc = (EditText) view.findViewById(R.id.study_code_value);
         Button sctmp = (Button) view.findViewById(R.id.study_code_save);
-        view.findViewById(R.id.study_code_value).setOnClickListener(view10 -> {
-            if (sctmp.isEnabled() == false)
-                sctmp.setEnabled(true);
-        });
+
 
         try {
             String ss = loadSCFile(getContext(),scfile);
-            EditText sc = (EditText) view.findViewById(R.id.study_code_value);
-            sc.setText(ss);
+            if (ss.equals("")) {
+                sc.setEnabled(true);
+                sctmp.setEnabled(true);
+                sctmp.setVisibility(view.VISIBLE);
+            }
+            else {
+                sctmp.setVisibility(view.INVISIBLE);
+                sc.setEnabled(false);
+                sc.setText(ss);
+            }
         } catch (Exception e) {
             throw new RuntimeException("Cannot load sc", e);
         }
 
-        view.findViewById(R.id.study_code_save).setOnClickListener(view9 -> {
-            EditText scedt = (EditText) view.findViewById((R.id.study_code_value));
-            writeSCFile(scedt.getText().toString(), getContext());
+        //Save profile
+        sctmp.setOnClickListener(view9 -> {
+            writeSCFile(sc.getText().toString(), getContext());
+           sc.setEnabled(false);
+            sctmp.setEnabled(false);
+            sctmp.setVisibility(getView().INVISIBLE);
         });
 
-//        view.findViewById(R.id.go_to_fallreport).setOnClickListener(view18 -> {
-//            Intent i = new Intent(view.getContext(), FallReportFragment.class);
-//            startActivity(i);
-        ////Need to use an intent to transition to the navigation activity, possibly with an additional key which points to either the recording or reporting fragments.
-//        });
 
-        //        view.findViewById(R.id.go_to_recording).setOnClickListener(view20 -> {
-//            Intent i = new Intent(view.getContext(), Fragment.class);
-//            startActivity(i);
-//        });
-
-
-        view.findViewById(R.id.led_red_on).setOnClickListener(view1 -> {
-            configureChannel(ledModule.editPattern(Color.RED));
-            ledModule.play();
-        });
-        view.findViewById(R.id.led_green_on).setOnClickListener(view12 -> {
-            configureChannel(ledModule.editPattern(Color.GREEN));
-            ledModule.play();
-        });
-        view.findViewById(R.id.led_blue_on).setOnClickListener(view13 -> {
-            configureChannel(ledModule.editPattern(Color.BLUE));
-            ledModule.play();
-        });
-        view.findViewById(R.id.led_stop).setOnClickListener(view14 -> ledModule.stop(true));
-
-        view.findViewById(R.id.board_battery_level_text).setOnClickListener(v -> mwBoard.readBatteryLevelAsync()
-                .continueWith(task -> {
-                    ((TextView) view.findViewById(R.id.board_battery_level_value)).setText(String.format(Locale.US, "%d", task.getResult()));
-                    return null;
-                }, Task.UI_THREAD_EXECUTOR)
-        );
 
 //        View current = getActivity().getCurrentFocus();
 //       if (current != null) current.clearFocus();
@@ -221,6 +207,7 @@ public class HomeFragment extends ModuleFragmentBase {
     }
 
 
+
     private void setupDfuDialog(AlertDialog.Builder builder, int msgResId) {
         builder.setTitle(R.string.title_firmware_update)
                 .setPositiveButton(R.string.label_yes, (dialogInterface, i) -> fragBus.initiateDfu(null))
@@ -245,12 +232,6 @@ public class HomeFragment extends ModuleFragmentBase {
         setupFragment(getView());
     }
 
-    private void configureChannel(Led.PatternEditor editor) {
-        final short PULSE_WIDTH = 1000;
-        editor.highIntensity((byte) 31).lowIntensity((byte) 31)
-                .highTime((short) (PULSE_WIDTH >> 1)).pulseDuration(PULSE_WIDTH)
-                .repeatCount((byte) -1).commit();
-    }
 
     private void setupFragment(final View v) {
         final String METABOOT_WARNING_TAG = "metaboot_warning_tag";
@@ -270,16 +251,15 @@ public class HomeFragment extends ModuleFragmentBase {
             }
         }
 
+        ProgressBar batt_level = (ProgressBar) getView().findViewById(R.id.board_battery_level_value);
+         mwBoard.readBatteryLevelAsync()
+                .continueWith(task -> {
+                    int battmp = task.getResult();
+                    batt_level.setProgress(battmp);
+                    return null;
+                });
 
-        int[] ledResIds = new int[]{R.id.led_stop, R.id.led_red_on, R.id.led_green_on, R.id.led_blue_on};
-        if ((ledModule = mwBoard.getModule(Led.class)) != null) {
-            for (int id : ledResIds) {
-                v.findViewById(id).setEnabled(true);
-            }
-        } else {
-            for (int id : ledResIds) {
-                v.findViewById(id).setEnabled(false);
-            }
-        }
+
+
     }
 }

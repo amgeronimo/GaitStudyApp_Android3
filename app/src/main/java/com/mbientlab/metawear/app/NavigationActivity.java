@@ -35,6 +35,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -63,6 +64,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mbientlab.metawear.MetaWearBoard;
@@ -103,6 +105,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         tempMap.put(R.id.nav_accelgyro, AccelGyroFragment.class);
         tempMap.put(R.id.nav_fallreport, FallReportFragment.class);
 
+
         FRAGMENT_CLASSES = Collections.unmodifiableMap(tempMap);
     }
 
@@ -142,6 +145,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
             return reconnectDialog;
         }
+
+
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -356,6 +361,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+
+//If Home or Perform a Recording Fragment, follow the stuff below
 
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();

@@ -139,26 +139,6 @@ public abstract class SensorFragment_mod extends ModuleFragmentBase{
         startButton.setText(R.string.label_start_sample);
         //startButton.setEnabled(false);
 
-        SeekBar sbar = (SeekBar) view.findViewById(R.id.rec_length);
-        double rectimer = Double.valueOf(sbar.getProgress() + 1);
-        TextView tView = (TextView) view.findViewById(R.id.rec_length_label);
-        tView.setText(rectimer + " minutes");
-        sbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            double rval = 0;
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                rval = Double.valueOf(progress+1);
-            }
-            @Override
-            public void onStartTrackingTouch (SeekBar seekBar) {
-            }
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                String update = rval + " minutes";
-                tView.setText(update);
-            }
-
-        });
 
         Button cancelButton= (Button) view.findViewById(R.id.layout_two_button_right);
         cancelButton.setText(R.string.label_cancel);

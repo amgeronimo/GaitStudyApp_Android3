@@ -72,31 +72,6 @@
                     android:gravity="center_vertical"
                     android:text="@string/rec_text"></TextView>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/rec_length_label"
-                        android:layout_width="fill_parent"
-                        android:layout_height="100dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/rec_length"></TextView>
-
-                    <SeekBar
-                        android:id="@+id/rec_length"
-                        style="@style/Widget.AppCompat.SeekBar.Discrete"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/rec_length_inst"
-                        android:max="30"
-                        android:progress="3" />
-
-                </LinearLayout>
 
             </LinearLayout>
 

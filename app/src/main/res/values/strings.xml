@@ -33,9 +33,7 @@
 
     <string name="app_name">GaitStudyApp</string>
 
-    <string name="rec_text">Set recording length</string>
-    <string name="rec_length_inst">Recording length can be set from a minimum of 5 minutes to a maximum of 20.</string>
-    <string name="rec_length"></string>
+    <string name="rec_text">The recording length is 10 minutes.  The bar below indicates the progress.</string>
 
 
     <string name="action_reset">Reset</string>
@@ -43,6 +41,7 @@
     <string name="action_scan">Scan</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_disconnect">Disconnect</string>
+    <string name="action_back">Back</string>
     <string name="permission_read_external_storage">In order to manually update the firmware, the app requires read external storage permissions.</string>
 
     <string name="description_rssi">Visual representation of the RSSI value</string>
@@ -170,13 +169,13 @@
     <string name="label_assistance_walker">Walker</string>
     <string name="label_assistance_other">Other</string>
     <string name="label_assistance_text">Type of mobility assistance used</string>
-    <string name="label_fallreport_button">Submit Fall Report</string>
+    <string name="label_nav_report">Fall Reporting</string>
+    <string name="label_fallreport_button">Submit a Fall Report</string>
     <string name="label_fallreport_description">Clicking the button below will take you to a survey to
     complete the fall report.  Please make sure you have an internet connection before proceeding.</string>
     <string name="label_report_code">Your study code is</string>
     <string name="label_null">NULL</string>
-    <string name="label_bypass_scan">Bypass Sensor Connection</string>
-    <string name="label_sensor_info">The sensor is currently connected.  Check the battery level regularly.</string>
+    <string name="label_sensor_info">The sensor is currently connected.</string>
     <string name="label_other_instructions">Use the menu in the top left corner to start a recording or report a fall.</string>
     <string name="label_go_to_recording">Perform Recording (requires sensor)</string>
     <string name="label_go_to_fallreport">Report a fall</string>

@@ -43,6 +43,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -103,6 +104,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import bolts.Continuation;
@@ -136,8 +138,7 @@ public class AccelGyroFragment extends SensorFragment_mod {
         super(R.string.navigation_fragment_accelgyro, R.layout.fragment_sensor_mod);
     }
 
-
-    private final ArrayList<Entry> xAxisData= new ArrayList<>(), yAxisData= new ArrayList<>(), zAxisData= new ArrayList<>();
+    private final ArrayList<Entry> xAxisData = new ArrayList<>(), yAxisData = new ArrayList<>(), zAxisData = new ArrayList<>();
     private final String dataType = "accel";
     protected float samplePeriod;
 
@@ -151,16 +152,17 @@ public class AccelGyroFragment extends SensorFragment_mod {
     protected void add1xChartData(float x0, float samplePeriod) {
         LineData chartData = chart.getData();
         chartData.addXValue(String.format(Locale.US, "%.2f", sampleCount * samplePeriod));
-            chartData.addEntry(new Entry(x0, sampleCount), 0);
+        chartData.addEntry(new Entry(x0, sampleCount), 0);
         sampleCount++;
         updateChart();
     }
+
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         try {
-            String ss = HomeFragment.loadSCFile(getContext(),"SCfile.txt");
+            String ss = HomeFragment.loadSCFile(getContext(), "SCfile.txt");
             TextView sc = (TextView) view.findViewById(R.id.studyCode);
             sc.setText(ss);
         } catch (Exception e) {
@@ -184,10 +186,7 @@ public class AccelGyroFragment extends SensorFragment_mod {
     protected void setup(View view) {
 
 
-
-
-
-        refreshChart(view,true);
+        refreshChart(view, true);
 
         TextView studycode = (TextView) view.findViewById(R.id.studyCode);
 //        String sc = studycode.getText().toString();
@@ -196,8 +195,6 @@ public class AccelGyroFragment extends SensorFragment_mod {
         startButton.setEnabled(false);
         Button cancelButton = (Button) view.findViewById(R.id.layout_two_button_right);
         cancelButton.setEnabled(true);
-        SeekBar rectimer = (SeekBar) view.findViewById(R.id.rec_length);
-        rectimer.setEnabled(false);
         RadioGroup asstgrp = (RadioGroup) getView().findViewById(R.id.AssistanceRadioGroup);
         for (int i = 0; i < asstgrp.getChildCount(); i++) {
             asstgrp.getChildAt(i).setEnabled(false);
@@ -213,7 +210,7 @@ public class AccelGyroFragment extends SensorFragment_mod {
     protected void clean(View view, boolean SendEmail) {
         stopStreaming();
 //        logging.stop();
-        if (SendEmail==true) {
+        if (SendEmail == true) {
             TextView studycode = (TextView) view.findViewById(R.id.studyCode);
             RadioGroup asstgrp = (RadioGroup) getView().findViewById(R.id.AssistanceRadioGroup);
 //            for (int i = 0; i < asstgrp.getChildCount(); i++) {
@@ -229,7 +226,7 @@ public class AccelGyroFragment extends SensorFragment_mod {
             //String sc = studycode.getText().toString();
             saveData(sc);
         }
-resetData(view, true);
+        resetData(view, true);
         mwBoard.tearDown();
     }
 
@@ -239,7 +236,7 @@ resetData(view, true);
         editor.odr(ACC_FREQ);
         editor.range(BOSCH_RANGES[accRange]);
         editor.commit();
-        samplePeriod= 1 / accelerometer.getOdr();
+        samplePeriod = 1 / accelerometer.getOdr();
 
 
         final AsyncDataProducer producer = accelerometer.packedAcceleration() == null ?
@@ -289,8 +286,7 @@ resetData(view, true);
 
 
             ProgressBar pbar = (ProgressBar) view.findViewById(R.id.progressBar);
-            SeekBar sbar = (SeekBar) view.findViewById(R.id.rec_length);
-            long rectimer = (sbar.getProgress() + 1)*60*1000; //Remove the /10
+            long rectimer = (10) * 100; //for 10 minutes, 10*60*1000
             rHandler = new Handler();
             rHandler.postDelayed(() -> pbar.setProgress(10), (rectimer) / 10);
             rHandler.postDelayed(() -> pbar.setProgress(20), 2 * (rectimer) / 10);
@@ -302,7 +298,7 @@ resetData(view, true);
             rHandler.postDelayed(() -> pbar.setProgress(80), 8 * (rectimer) / 10);
             rHandler.postDelayed(() -> pbar.setProgress(90), 9 * (rectimer) / 10);
             rHandler.postDelayed(() -> pbar.setProgress(100), (rectimer));
-            rHandler.postDelayed(() -> clean(view,true), rectimer);
+            rHandler.postDelayed(() -> clean(view, true), rectimer);
 
             return null;
         });
@@ -310,7 +306,6 @@ resetData(view, true);
     }
 
     void stopStreaming() {
-
 
 
         if (accelerometer != null) {
@@ -334,7 +329,7 @@ resetData(view, true);
         final String accCSV_HEADER = String.format("time,x-accel,y-accel,z-accel%n");
         final Calendar currtime = Calendar.getInstance();
         final String filedate = String.format(Locale.US, "%tY%<tm%<td-%<tH%<tM%<tS%<tL.csv", currtime);
-
+        final String senddate = String.format(Locale.US, "%tm/%<td %<tH:%<tM", currtime);
 
         final String accfilename = String.format(Locale.US, "%s_%s_%s", sc, "ACC", filedate);
         final File accpath = new File(Environment.getExternalStoragePublicDirectory(
@@ -384,12 +379,39 @@ resetData(view, true);
             String emailSubject = sc + " data";
             String emailBody = "";
             Activity curractivity = this.getActivity();
-            new SendMailTask(curractivity).execute(fromEmail,
+//            SendMailTask mSendMail = new SendMailTask(curractivity);
+//                mSendMail.execute(fromEmail,
+//                    fromPassword, toEmailList, emailSubject, emailBody, filedate, sc);
+
+
+            //this override the implemented method from asyncTask
+            new SendMailTask(curractivity, new SendMailTask.MailDelegate() {
+                //Here you will receive the result fired from async class
+                //of onPostExecute(result) method.
+                @Override
+                public void MailResult(Boolean output) {
+                    TextView ntfn = (TextView) getView().findViewById(R.id.emailind);
+                    if (output) {
+                        ntfn.setText("Email Sent " + senddate);
+                        int greencolorval = Color.parseColor("#3A8953");
+                        ntfn.setTextColor(greencolorval);
+                        // In future version, could include a text file that contains a list
+                        // of the successfully sent files.  Here we would print the current
+                        // filename to that list
+                    } else {
+                        ntfn.setText("Email Failed " + senddate);
+                        int redcolorval = Color.parseColor("#9B1B30");
+                        ntfn.setTextColor(redcolorval);
+                    }
+                }
+            }).execute(fromEmail,
                     fromPassword, toEmailList, emailSubject, emailBody, filedate, sc);
-            Log.i("SentEmail", "email was sent!");
+
+
         }
         return filedate;
     }
+
 
     @Override
     protected void resetData(View view, boolean clearData) {
@@ -408,7 +430,7 @@ resetData(view, true);
             xAxisData.clear();
             yAxisData.clear();
             zAxisData.clear();
-            ArrayList<LineDataSet> spinAxisData= new ArrayList<>();
+            ArrayList<LineDataSet> spinAxisData = new ArrayList<>();
             spinAxisData.add(new LineDataSet(xAxisData, "x-" + dataType));
             spinAxisData.get(0).setColor(Color.RED);
             spinAxisData.get(0).setDrawCircles(false);
@@ -421,8 +443,8 @@ resetData(view, true);
             spinAxisData.get(2).setColor(Color.BLUE);
             spinAxisData.get(2).setDrawCircles(false);
 
-            LineData data= new LineData(chartXValues);
-            for(LineDataSet set: spinAxisData) {
+            LineData data = new LineData(chartXValues);
+            for (LineDataSet set : spinAxisData) {
                 data.addDataSet(set);
             }
             data.setDrawValues(false);
@@ -443,14 +465,15 @@ resetData(view, true);
             startButton.setEnabled(true);
             Button cancelButton = (Button) getView().findViewById(R.id.layout_two_button_right);
             cancelButton.setEnabled(false);
-            SeekBar rectimer = (SeekBar) getView().findViewById(R.id.rec_length);
-            rectimer.setEnabled(true);
             ProgressBar pbar = (ProgressBar) getView().findViewById(R.id.progressBar);
             pbar.setProgress(0);
             RadioGroup asstgrp = (RadioGroup) getView().findViewById(R.id.AssistanceRadioGroup);
             for (int i = 0; i < asstgrp.getChildCount(); i++) {
                 asstgrp.getChildAt(i).setEnabled(true);
             }
+
+            TextView ntfn = (TextView) getView().findViewById(R.id.emailind);
+           ntfn.setText("");
 
         }
 

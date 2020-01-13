@@ -34,22 +34,29 @@ package com.mbientlab.metawear.app;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mbientlab.metawear.UnsupportedModuleException;
 import com.mbientlab.metawear.app.help.HelpOptionAdapter;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 
 /**
  * Created by etsai on 8/22/2015.
  */
-public class FallReportFragment extends ModuleFragmentBase {
+public class FallReportFragment_nobt extends Fragment {
 
-    public FallReportFragment() {
-        super(R.string.navigation_fragment_fallreport);
+    public FallReportFragment_nobt() {
     }
 
     @Override
@@ -83,20 +90,6 @@ public class FallReportFragment extends ModuleFragmentBase {
 
 
 
-
-    @Override
-    protected void boardReady() throws UnsupportedModuleException {
-    }
-
-    @Override
-    protected void fillHelpOptionAdapter(HelpOptionAdapter adapter) {
-
-    }
-
-    @Override
-    public void reconnected() {
-
-    }
 
 
 

@@ -12,19 +12,20 @@
         android:id="@+id/ble_scan_title"
         android:layout_gravity="center_horizontal" />
 
-    <fragment xmlns:tools="http://schemas.android.com/tools" android:id="@+id/scanner_fragment"
+    <fragment xmlns:tools="http://schemas.android.com/tools"
         android:name="com.mbientlab.metawear.app.BleScannerFragmentAuto"
+        android:id="@+id/scanner_fragment"
         tools:layout="@layout/blescan_device_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
 
     <Button
-        android:id="@+id/bypass_scan"
+        android:id="@+id/nav_report"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="8"
-        android:text="@string/label_bypass_scan" />
+        android:text="@string/label_nav_report" />
 
 
 </LinearLayout>

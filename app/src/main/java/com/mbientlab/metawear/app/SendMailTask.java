@@ -3,21 +3,35 @@ package com.mbientlab.metawear.app;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
-public class SendMailTask extends AsyncTask {
+public class SendMailTask extends AsyncTask<Object,Object,Boolean> {
+
+
+    public interface MailDelegate {
+        void MailResult(Boolean output);
+    }
 
     private ProgressDialog statusDialog;
     private Activity sendMailActivity;
+    public MailDelegate delegate;
 
-    public SendMailTask(Activity activity) {
-        sendMailActivity = activity;
-
+    public SendMailTask(Activity activity, MailDelegate delegate) {
+        sendMailActivity=activity;
+        this.delegate = delegate;
     }
+
+
 
     protected void onPreExecute() {
         statusDialog = new ProgressDialog(sendMailActivity);
@@ -28,7 +42,7 @@ public class SendMailTask extends AsyncTask {
     }
 
     @Override
-    protected Object doInBackground(Object... args) {
+    protected Boolean doInBackground(Object... args) {
         try {
             Log.i("SendMailTask", "About to instantiate GMail...");
             publishProgress("Processing input....");
@@ -41,21 +55,24 @@ public class SendMailTask extends AsyncTask {
             androidEmail.sendEmail();
             publishProgress("Email Sent.");
             Log.i("SendMailTask", "Mail Sent.");
+            return Boolean.TRUE;
         } catch (Exception e) {
             publishProgress(e.getMessage());
             Log.e("SendMailTask", e.getMessage(), e);
+            return Boolean.FALSE;
         }
-        return null;
     }
 
     @Override
     public void onProgressUpdate(Object... values) {
         statusDialog.setMessage(values[0].toString());
-
     }
 
     @Override
-    public void onPostExecute(Object result) {
+    public void onPostExecute(Boolean result) {
         statusDialog.dismiss();
+        delegate.MailResult(result);
     }
+
+
 }

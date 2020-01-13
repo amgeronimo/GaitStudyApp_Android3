@@ -34,6 +34,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 
+import com.mbientlab.bletoolbox.scanner.BleScannerFragment;
 import com.mbientlab.bletoolbox.scanner.R.id;
 import com.mbientlab.bletoolbox.scanner.R.layout;
 import com.mbientlab.bletoolbox.scanner.R.string;
@@ -135,7 +136,10 @@ public class BleScannerFragmentAuto extends Fragment {
 
         ListView scannedDevices = (ListView)view.findViewById(id.blescan_devices);
         scannedDevices.setAdapter(this.scannedDevicesAdapter);
-
+        scannedDevices.setOnItemClickListener((adapterView, view1, i, l) -> {
+            BleScannerFragmentAuto.this.stopBleScan();
+            BleScannerFragmentAuto.this.commBus.onDeviceSelected(((ScannedDeviceInfo)BleScannerFragmentAuto.this.scannedDevicesAdapter.getItem(i)).btDevice);
+        }); //AG commented out in autoconnect version 11/13/19
         this.scanControl = (Button)view.findViewById(id.blescan_control);
         this.scanControl.setOnClickListener(new android.view.View.OnClickListener() {
             public void onClick(View view) {
@@ -244,7 +248,7 @@ public class BleScannerFragmentAuto extends Fragment {
                                 mHandler.post(new Runnable() {
                                     public void run() {
                                         scannedDevicesAdapter.update(new ScannedDeviceInfo(result.getDevice(), result.getRssi()));
-                                        stopBleScan(); //AG added 10/17/19
+//                                        stopBleScan(); //AG added 10/17/19
                                     }
                                 });
                             }
@@ -275,8 +279,8 @@ public class BleScannerFragmentAuto extends Fragment {
             this.scanControl.setText(string.ble_scan);
 
 
-            if (!scannedDevicesAdapter.isEmpty())
-                    commBus.onDeviceSelected(((ScannedDeviceInfo)scannedDevicesAdapter.getItem(0)).btDevice);
+//            if (!scannedDevicesAdapter.isEmpty())
+//                    commBus.onDeviceSelected(((ScannedDeviceInfo)scannedDevicesAdapter.getItem(0)).btDevice);
 
         }
 

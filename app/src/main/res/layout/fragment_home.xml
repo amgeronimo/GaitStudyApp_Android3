@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015 MbientLab Inc. All rights reserved.
   ~
   ~ IMPORTANT: Your use of this Software is limited to those specific rights
@@ -37,31 +36,34 @@
     android:paddingRight="@dimen/activity_horizontal_margin">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/label_study_code"
-                    android:layout_weight="1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:text="@string/label_study_code"
+                android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
 
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:gravity="center_horizontal"
-                    android:id="@+id/study_code_value"
-                    android:inputType="text"
-                    android:hint="@string/label_study_code_hint"
-                    android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/study_code_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="18sp"
+                android:hint="@string/label_study_code_hint"
+                android:inputType="text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Button
                 android:id="@+id/study_code_save"
@@ -69,115 +71,69 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="18sp"
                 android:enabled="false"
                 android:text="@string/label_study_code_save" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/go_to_recording"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_go_to_recording" />
-
-        <Button
-            android:id="@+id/go_to_fallreport"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_go_to_fallreport"/>
-
-        <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/label_sensor_info"
-        android:layout_weight="1"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/label_battery_level"
-                    android:textColor="@color/action_text"
-                    android:id="@+id/board_battery_level_text"
-                    android:layout_weight="1"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:gravity="center_horizontal"
-                    android:id="@+id/board_battery_level_value"
-                    android:layout_weight="1"/>
-
-</LinearLayout>
-
-
-
-
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_device_section_led"
-            android:id="@+id/textView"
-            android:layout_gravity="center_horizontal" />
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:text="@string/label_sensor_info"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            style="?android:attr/buttonBarStyle" >
+            android:orientation="horizontal">
 
-            <Button
+
+            <TextView
+                android:id="@+id/board_battery_level_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/label_led_red_on"
-                style="?android:attr/buttonBarButtonStyle"
-                android:textColor="@android:color/holo_red_dark"
-                android:id="@+id/led_red_on" />
+                android:textSize="18sp"
+                android:text="@string/label_battery_level"
+                android:layout_gravity="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/label_led_green_on"
-                android:textColor="@android:color/holo_green_dark"
-                style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/led_green_on" />
 
-            <Button
+            <ProgressBar
+                android:id="@+id/board_battery_level_value"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_led_blue_on"
-                style="?android:attr/buttonBarButtonStyle"
-                android:textColor="@android:color/holo_blue_dark"
-                android:layout_weight="1"
-                android:id="@+id/led_blue_on" />
+                android:layout_height="50dp"
+                android:layout_weight="5"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
+                <requestFocus/>
+
+
+            <!--<ProgressBar-->
+                <!--android:id="@+id/board_battery_level_value"-->
+                <!--style="@style/Widget.AppCompat.ProgressBar.Horizontal"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:max="100"-->
+                <!--android:layout_weight="5"-->
+                <!--android:textAppearance="?android:attr/textAppearanceMedium" />-->
+
         </LinearLayout>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="?android:attr/buttonBarButtonStyle"
-            android:text="@string/label_led_off"
-            android:id="@+id/led_stop" />
 
         <TextView
+            android:id="@+id/other_instructions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp"
             android:text="@string/label_other_instructions"
-            android:id="@+id/other_instructions"
-            android:layout_gravity="center_horizontal" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
 
     </LinearLayout>
 </ScrollView>

@@ -64,9 +64,12 @@ public class ScannerActivity extends AppCompatActivity implements BleScannerFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
 
-        Button bypass = (Button) findViewById(R.id.bypass_scan);
+        Button bypass = (Button) findViewById(R.id.nav_report);
         bypass.setOnClickListener(view -> {
 //Want to be able to bypass scanning, and go directly to the fall reporting module
+            getApplicationContext().unbindService(this);
+            Intent cancelScannerIntent = new Intent(ScannerActivity.this, NavigationActivityNoBT.class);
+            startActivityForResult(cancelScannerIntent, RESULT_OK);
                 });
 
 
